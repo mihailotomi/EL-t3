@@ -1,0 +1,43 @@
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/bin/
+**/obj/
+**/*.user
+**/*.rsuser
+**/*.suo
+.vscode/
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Docker
+**/[Dd]ockerfile*
+**/[Dd]ocker-compose*
+!.dockerignore
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Python
+__pycache__/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# GitHub
+.github/
