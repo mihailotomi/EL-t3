@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.Core", "EL-t3.Core\EL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.Infrastructure", "EL-t3.Infrastructure\EL-t3.Infrastructure.csproj", "{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.CLI", "EL-t3.CLI\EL-t3.CLI.csproj", "{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
