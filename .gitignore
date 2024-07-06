@@ -8,6 +8,7 @@ artifacts/
 **/*.rsuser
 **/*.suo
 .vscode/
+.vs/
 *.sln.docstates
 
 # Visual Studio Code

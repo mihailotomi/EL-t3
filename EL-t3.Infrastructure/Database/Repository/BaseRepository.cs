@@ -46,5 +46,10 @@ where TEntity : class
         await _context.SaveChangesAsync();
     }
 
+    public async Task<TEntity?> FindByIdAsync(int id)
+    {
+        return await DbSet.FindAsync(id);
+    }
+
     public void Dispose() => _context.Dispose();
 }
