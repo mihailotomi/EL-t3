@@ -23,5 +23,7 @@ var app = builder.Build();
 
 {
     app.AddCommands<ClubCommands>();
+    app.AddCommands<PlayerCommands>();
+
     app.Run();
 }

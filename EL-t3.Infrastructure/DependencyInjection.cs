@@ -12,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<EuroleagueApiGateway>();
         services.AddSingleton<IClubGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
+        services.AddSingleton<IPlayerBySeasonGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
 
         return services;
     }
@@ -19,6 +20,8 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IClubRepository, ClubRepository>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IPlayerSeasonRepository, PlayerSeasonRepository>();
 
         return services;
     }
