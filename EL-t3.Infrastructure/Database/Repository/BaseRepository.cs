@@ -28,6 +28,12 @@ where TEntity : class
         return insertedEntity.Entity;
     }
 
+    public Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> query)
+    {
+        return DbSet.FirstOrDefaultAsync(query);
+    }
+
+
     public async Task InsertManyAsync(IEnumerable<TEntity> entities)
     {
         ArgumentNullException.ThrowIfNull(entities);
