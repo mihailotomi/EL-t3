@@ -1,5 +1,7 @@
+using EL_t3.Core.Interfaces.Context;
 using EL_t3.Core.Interfaces.Gateway;
 using EL_t3.Core.Interfaces.Repository;
+using EL_t3.Infrastructure.Database;
 using EL_t3.Infrastructure.Database.Repository;
 using EL_t3.Infrastructure.Gateway;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IClubRepository, ClubRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IPlayerSeasonRepository, PlayerSeasonRepository>();
+        services.AddScoped<IAppDatabaseContext, AppDatabaseContext>();
 
         return services;
     }

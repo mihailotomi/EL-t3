@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using EL_t3.Core.Entities;
+using EL_t3.Core.Interfaces.Context;
 
 namespace EL_t3.Infrastructure.Database;
 
-public class AppDatabaseContext : DbContext
+public class AppDatabaseContext : DbContext, IAppDatabaseContext
 {
     public AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : base(options)
     {
