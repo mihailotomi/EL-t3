@@ -15,8 +15,6 @@ public class ClubController : Controller
     }
 
     [HttpGet("{id}")]
-    //[SwaggerResponse(StatusCodes.Status404NotFound, "The document was not found")]
-    //[SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden access to the document")]
     public async Task<IActionResult> GetClubById(int id)
     {
         var query = new GetClubByIdQuery(id);
