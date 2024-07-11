@@ -33,7 +33,6 @@ where TEntity : class
         return DbSet.FirstOrDefaultAsync(query);
     }
 
-
     public async Task InsertManyAsync(IEnumerable<TEntity> entities)
     {
         ArgumentNullException.ThrowIfNull(entities);

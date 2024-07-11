@@ -9,6 +9,12 @@ public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
 
+    private readonly JsonSerializerOptions serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+
+    };
+
     public ErrorHandlerMiddleware(RequestDelegate next)
     {
         _next = next;
@@ -25,24 +31,16 @@ public class ErrorHandlerMiddleware
             var response = context.Response;
             response.ContentType = "application/json";
 
-            switch (error)
+            response.StatusCode = error switch
             {
-                case ApiException e:
-                    response.StatusCode = e.StatusCode;
-                    break;
-                case EntityNotFoundException e:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    break;
-                case KeyNotFoundException e:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
-                    break;
-                default:
-                    // unhandled error
-                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    break;
-            }
+                ApiException e => e.StatusCode,
+                EntityNotFoundException e => (int)HttpStatusCode.BadRequest,
+                FluentValidation.ValidationException e => (int)HttpStatusCode.BadRequest,
+                ValidationException e => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError,// unhandled error
+            };
 
-            var result = JsonSerializer.Serialize(new { message = error?.Message });
+            var result = JsonSerializer.Serialize(new { message = error?.Message, data = error?.Data }, serializerOptions);
             await response.WriteAsync(result);
         }
     }
