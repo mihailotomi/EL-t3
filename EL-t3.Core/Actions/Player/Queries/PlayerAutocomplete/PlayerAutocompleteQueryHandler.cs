@@ -1,5 +1,4 @@
 using EL_t3.Core.Interfaces.Context;
-using EL_t3.Core.Interfaces.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +18,7 @@ public record PlayerAutocompleteQueryHandler : IRequestHandler<PlayerAutocomplet
     {
         var searchPattern = $"%{request.Search}%";
 
-        return await _context.Players.AsQueryable()
+        return await _context.Players
             .Where(p => EF.Functions.Like(p.FirstName + " " + p.LastName, searchPattern) ||
                     EF.Functions.Like(p.LastName + " " + p.FirstName, searchPattern))
             .ToListAsync(cancellationToken);
