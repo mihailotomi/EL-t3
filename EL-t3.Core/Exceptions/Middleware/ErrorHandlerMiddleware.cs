@@ -35,6 +35,7 @@ public class ErrorHandlerMiddleware
             {
                 ApiException e => e.StatusCode,
                 EntityNotFoundException e => (int)HttpStatusCode.BadRequest,
+                ArgumentNullException e => (int)HttpStatusCode.BadRequest,
                 FluentValidation.ValidationException e => (int)HttpStatusCode.BadRequest,
                 ValidationException e => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError,// unhandled error

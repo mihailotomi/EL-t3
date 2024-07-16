@@ -13,6 +13,12 @@ public class ValidationException : Exception
         StatusCode = statusCode;
     }
 
+    public ValidationException(string property, string message, int statusCode = 400)
+    {
+        ValidationErrors = [new ValidationFailure(property, message)];
+        StatusCode = statusCode;
+    }
+
     public ValidationException(ValidationFailure validationError, int statusCode = 400)
     {
         ValidationErrors = [validationError];
