@@ -4,6 +4,5 @@ namespace EL_t3.Core.Interfaces.Gateway;
 
 public interface IPlayerByClubGateway
 {
-    Task<IEnumerable<Player>> FetchPlayersByClubAsync(string clubCode);
-    Task<IEnumerable<PlayerSeason>> FetchPlayerSeasonsByClubAsync(string clubCode);
+    Task<(IEnumerable<PlayerSeason> playerSeasons, IEnumerable<string> errors)> FetchPlayersSeasonsByClubAsync(string clubCode);
 }
