@@ -10,17 +10,16 @@ namespace EL_t3.Infrastructure.Gateway;
 
 public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly HttpClient _client;
 
     public EuroleagueApiGateway(IHttpClientFactory httpClientFactory)
     {
-        _httpClientFactory = httpClientFactory;
+        _client = httpClientFactory.CreateClient("euroleague-api");
     }
 
-    public async Task<(IEnumerable<Club> clubs, IEnumerable<GatewayClubFailure> errors)> FetchClubsBySeasonAsync(int season)
+    public async Task<(IEnumerable<Club> clubs, IEnumerable<string> errors)> FetchClubsBySeasonAsync(int season)
     {
-        var client = _httpClientFactory.CreateClient("euroleague-api");
-        var response = await client.GetFromJsonAsync<GatewayListResponse<GatewayClub>>($"/v2/competitions/E/seasons/E{season}/clubs");
+        var response = await _client.GetFromJsonAsync<GatewayListResponse<GatewayClub>>($"/v2/competitions/E/seasons/E{season}/clubs");
 
         if (response == null || response.Data == null)
         {
@@ -30,7 +29,7 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
         var validator = new GatewayClubValidator();
 
         var validClubs = new List<Club>();
-        var validationErrors = new List<GatewayClubFailure>();
+        var validationErrors = new List<string>();
 
         foreach (var gc in response.Data)
         {
@@ -41,22 +40,21 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
             }
             else
             {
-                validationErrors.Add(new GatewayClubFailure(gc.Code, validationResult.Errors.Select(e => e.ErrorMessage)));
+                validationErrors.AddRange(validationResult.Errors.Select(e => $"{gc.Code} {e.ErrorMessage}"));
             }
         }
 
         return (validClubs, validationErrors);
     }
 
-    public async Task<(IEnumerable<PlayerSeason> playerSeasons, IEnumerable<GatewayPlayerFailure> errors)> FetchPlayerSeasonsBySeasonAsync(int season)
+    public async Task<(IEnumerable<PlayerSeason> playerSeasons, IEnumerable<string> errors)> FetchPlayerSeasonsBySeasonAsync(int season)
     {
-        var client = _httpClientFactory.CreateClient("euroleague-api");
-        var response = await client.GetFromJsonAsync<GatewayListResponse<GatewayPlayerSeason>>($"/v2/competitions/E/seasons/E{season}/people?personType=J");
+        var response = await _client.GetFromJsonAsync<GatewayListResponse<GatewayPlayerSeason>>($"/v2/competitions/E/seasons/E{season}/people?personType=J");
 
         var validator = new GatewayPlayerSeasonValidator();
 
         var validPlayerSeasons = new List<PlayerSeason>();
-        var validationErrors = new List<GatewayPlayerFailure>();
+        var validationErrors = new List<string>();
 
         if (response == null || response.Data == null)
         {
@@ -72,7 +70,7 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
             }
             else
             {
-                validationErrors.Add(new GatewayPlayerFailure(ps.Person.Name, validationResult.Errors.Select(e => e.ErrorMessage)));
+                validationErrors.AddRange(validationResult.Errors.Select(e => $"{ps.Person.Name} {e.ErrorMessage}"));
             }
         }
 

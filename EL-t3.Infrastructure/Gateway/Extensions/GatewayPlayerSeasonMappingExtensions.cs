@@ -13,8 +13,8 @@ public static class GatewayPlayerSeasonMappingExtensions
         {
             Player = new Player
             {
-                LastName = nameParts![0],
-                FirstName = nameParts![1],
+                LastName = nameParts![0].ToUpper().Trim(),
+                FirstName = nameParts![1].ToUpper().Trim(),
                 BirthDate = DateOnly.Parse(ps.Person.BirthDate),
                 Country = ps.Person.Country.Code,
                 ImageUrl = ps.Images?.Headshot,
