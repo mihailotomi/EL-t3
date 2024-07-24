@@ -13,6 +13,10 @@ var builder = CoconaApp.CreateBuilder();
     {
         client.BaseAddress = new Uri("https://api-live.euroleague.net");
     });
+    builder.Services.AddHttpClient("proballers", client =>
+    {
+        client.BaseAddress = new Uri("https://www.proballers.com");
+    });
     builder.Services.AddGateways();
     builder.Services.AddRepositories();
     builder.Services.AddDbContext<AppDatabaseContext>(options =>

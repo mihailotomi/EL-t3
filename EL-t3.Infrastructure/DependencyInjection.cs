@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddSingleton<EuroleagueApiGateway>();
         services.AddSingleton<IClubGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
         services.AddSingleton<IPlayerBySeasonGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
+        services.AddSingleton<IPlayerByClubGateway, ProballersGateway>();
 
         return services;
     }
