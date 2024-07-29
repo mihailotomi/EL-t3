@@ -41,6 +41,8 @@ public class ErrorHandlerMiddleware
                 _ => (int)HttpStatusCode.InternalServerError,// unhandled error
             };
 
+            Console.Error.Write(error);
+
             var result = JsonSerializer.Serialize(new { message = error?.Message, data = error?.Data }, serializerOptions);
             await response.WriteAsync(result);
         }

@@ -1,4 +1,5 @@
 using EL_t3.Core.Actions.Player.Queries.CheckConstraints;
+using EL_t3.Core.Entities;
 using EL_t3.Core.Exceptions;
 
 namespace EL_t3.API.Contracts.Player;
@@ -14,9 +15,9 @@ public static class GatewayPlayerSeasonMappingExtensions
 
         switch (dto.Type)
         {
-            case PlayerConstraintType.CLUB:
+            case GridItemType.CLUB:
                 return new PlayerClubConstraint(dto.Id);
-            case PlayerConstraintType.COUNTRY:
+            case GridItemType.COUNTRY:
                 return new PlayerCountryConstraint(dto.Code);
             default:
                 throw new ValidationException("Type", "Constraint must have a valid type.");
