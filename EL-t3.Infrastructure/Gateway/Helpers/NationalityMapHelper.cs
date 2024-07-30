@@ -11,7 +11,7 @@ public class NationalityMapHelper
             { "FRENCH", "FRA" },
             { "RUSSIAN", "RUS" },
             { "LITHUANIAN", "LTU" },
-            { "CROATIAN", "CRO" },
+            { "CROATIAN", "HRV" },
             { "GREEK", "GRE" },
             { "ITALIAN", "ITA" },
             { "GERMAN", "GER" }
