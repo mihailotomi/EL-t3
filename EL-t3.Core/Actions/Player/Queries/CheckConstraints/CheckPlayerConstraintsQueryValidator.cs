@@ -6,7 +6,7 @@ public class PlayerClubConstraintValidator : AbstractValidator<PlayerClubConstra
 {
     public PlayerClubConstraintValidator()
     {
-        RuleFor(x => x.ClubId).NotEmpty().WithMessage("Club Id must not be empty and must be an integer.");
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Id must not be empty and must be an integer.");
     }
 }
 

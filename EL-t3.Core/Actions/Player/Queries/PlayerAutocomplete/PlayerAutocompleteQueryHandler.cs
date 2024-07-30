@@ -16,11 +16,11 @@ public record PlayerAutocompleteQueryHandler : IRequestHandler<PlayerAutocomplet
 
     public async Task<IEnumerable<Entities.Player>> Handle(PlayerAutocompleteQuery request, CancellationToken cancellationToken)
     {
-        var searchPattern = $"%{request.Search}%";
+        var searchPattern = $"%{request.Search.ToUpper()}%";
 
         return await _context.Players
             .Where(p => EF.Functions.Like(p.FirstName + " " + p.LastName, searchPattern) ||
                     EF.Functions.Like(p.LastName + " " + p.FirstName, searchPattern))
             .ToListAsync(cancellationToken);
     }
-}
+} 

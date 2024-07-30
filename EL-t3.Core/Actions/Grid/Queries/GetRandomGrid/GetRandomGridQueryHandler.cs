@@ -109,10 +109,14 @@ public record GetRandomGridQueryHandler : IRequestHandler<GetRandomGridQuery, En
                     on c.Id equals c2.ClubId
                     join c3 in sq3
                     on c.Id equals c3.ClubId
-                    orderby Math.Min(c3.Num, Math.Min(c1.Num, c2.Num))
+                    orderby Math.Min(c3.Num, Math.Min(c1.Num, c2.Num)) descending
                     select c;
 
-        return await query.Take(3).ToListAsync();
+        var topConstraintedClubs = await query.Take(10).ToListAsync();
+
+         return (from club in topConstraintedClubs
+                orderby Guid.NewGuid()
+                select club).Take(3).ToList();
     }
 
     private IQueryable<ClubCommonPlayersPayload> MapConstraintToSubquery(Entities.GridItem constraint)

@@ -15,35 +15,45 @@ public record CheckPlayerConstraintsQueryHandler : IRequestHandler<CheckPlayerCo
 
     public async Task<bool> Handle(CheckPlayerConstraintsQuery request, CancellationToken cancellationToken)
     {
-        var (countryCode, clubIds) = GetConstraintValuesByType(request.Constraints);
-        var query = from ps in _context.PlayerSeasons
-                    join p in _context.Players on ps.PlayerId equals p.Id
-                    where clubIds.Contains(ps.ClubId)
-                          && (string.IsNullOrEmpty(countryCode) || p.Country == countryCode)
-                    select ps.ClubId;
-
-        var distinctClubCount = await query.Distinct().CountAsync(cancellationToken: cancellationToken);
-
-        return distinctClubCount == clubIds.Count;
-    }
-
-    private (string? country, IList<int> clubIds) GetConstraintValuesByType(IEnumerable<PlayerConstraint> constraints)
-    {
-        string? country = null;
-        var clubIds = new List<int>();
-
-        foreach (var constraint in constraints)
+        foreach (var constraint in request.Constraints)
         {
-            if (constraint is PlayerClubConstraint clubConstraint)
+            var constraintResult = await ValidateConstraint(request.Id, constraint);
+            if (!constraintResult)
             {
-                clubIds.Add(clubConstraint.ClubId);
-            }
-            if (constraint is PlayerCountryConstraint countryConstraint)
-            {
-                country = countryConstraint.CountryCode;
+                return false;
             }
         }
+        return true;
+    }
 
-        return (country, clubIds);
+    private async Task<bool> ValidateConstraint(int playerId, PlayerConstraint constraint)
+    {
+        if (constraint is PlayerClubConstraint clubConstraint)
+        {
+            return await ValidateClubConstraint(playerId, clubConstraint);
+        }
+        if (constraint is PlayerCountryConstraint countryConstraint)
+        {
+            return await ValidateCountryConstraint(playerId, countryConstraint);
+        }
+        return false;
+    }
+
+    private async Task<bool> ValidateCountryConstraint(int playerId, PlayerCountryConstraint countryConstraint)
+    {
+        var num = await _context.Players
+                     .Where(p => p.Id == playerId && p.Country == countryConstraint.CountryCode)
+                     .CountAsync();
+
+        return num > 0;
+    }
+
+    private async Task<bool> ValidateClubConstraint(int playerId, PlayerClubConstraint clubConstraint)
+    {
+        var num = await _context.PlayerSeasons
+                     .Where(ps => ps.ClubId == clubConstraint.Id && ps.PlayerId == playerId)
+                     .CountAsync();
+
+        return num > 0;
     }
 }
