@@ -28,7 +28,12 @@ public class ClubCommands
                 Console.Error.WriteLine($"There are errors for season {season}");
             }
 
-            await _clubRepository.UpsertManyAsync(clubs, (c) => new { c.Code });
+            await _clubRepository.UpsertManyAsync(clubs, (c) => new { c.Code }, (cDb, cIns) => new Core.Entities.Club()
+            {
+                Name = cDb.Name,
+                Code = cDb.Code,
+                CrestUrl = cDb.CrestUrl ?? cIns.CrestUrl
+            });
             Console.WriteLine($"Finished seeding clubs for season {season}");
         }
     }

@@ -41,12 +41,13 @@ where TEntity : class
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match)
+    public async Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match, Expression<Func<TEntity, TEntity, TEntity>> whenMatched)
     {
         ArgumentNullException.ThrowIfNull(entities);
 
         await DbSet.UpsertRange(entities)
             .On(match)
+            .WhenMatched(whenMatched)
             .RunAsync();
         await _context.SaveChangesAsync();
     }

@@ -8,5 +8,5 @@ public interface IBaseRepository<TEntity>
     Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> query);
     Task<TEntity> InsertAsync(TEntity entity);
     Task InsertManyAsync(IEnumerable<TEntity> entities);
-    Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match);
+    Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match, Expression<Func<TEntity, TEntity, TEntity>> whenMatched);
 }

@@ -106,8 +106,14 @@ public class PlayerCommands
                 .Select(g => g.First())
                 .ToList();
 
-            
-            
+            await _playerRepository.UpsertManyAsync(players!, (p) => new { p.FirstName, p.LastName, p.BirthDate }, (pDb, pIns) => new Player()
+            {
+                FirstName = pDb.FirstName,
+                LastName = pDb.LastName,
+                BirthDate = pDb.BirthDate,
+                ImageUrl = pDb.ImageUrl ?? pIns.ImageUrl,
+                Country = pDb.Country ?? pIns.Country,
+            });
         }
         catch (Exception ex)
         {
@@ -115,10 +121,12 @@ public class PlayerCommands
             throw;
         }
 
+
+
         var playerSeasons = await PreparePlayerSeasons(rawPlayerSeasons);
         try
         {
-            await _playerSeasonRepository.UpsertManyAsync(playerSeasons, (p) => new { p.PlayerId, p.ClubId, p.Season });
+            await _playerSeasonRepository.UpsertManyAsync(playerSeasons, (p) => new { p.PlayerId, p.ClubId, p.Season }, (psDb, psIns) => new PlayerSeason() { });
         }
         catch (Exception ex)
         {
