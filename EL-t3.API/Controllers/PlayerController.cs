@@ -1,10 +1,10 @@
 using EL_t3.API.Contracts.Player;
-using EL_t3.Core.Actions.Player.Queries.CheckConstraints;
-using EL_t3.Core.Actions.Player.Queries.PlayerAutocomplete;
-using MediatR;
+using EL_t3.Application.Player.Queries.CheckConstraints;
+using EL_t3.Application.Player.Queries.PlayerAutocomplete;
+using EL_t3.Domain.Entities;
 using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using EL_t3.Core.Entities;
 
 namespace EL_t3.API.Controllers;
 

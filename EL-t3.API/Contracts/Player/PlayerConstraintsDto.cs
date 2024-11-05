@@ -1,4 +1,4 @@
-using EL_t3.Core.Entities;
+using EL_t3.Domain.Entities;
 
 namespace EL_t3.API.Contracts.Player;
 

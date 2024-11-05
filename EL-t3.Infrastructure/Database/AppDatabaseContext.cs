@@ -1,6 +1,6 @@
+using EL_t3.Application.Common.Interfaces.Context;
+using EL_t3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using EL_t3.Core.Entities;
-using EL_t3.Core.Interfaces.Context;
 
 namespace EL_t3.Infrastructure.Database;
 

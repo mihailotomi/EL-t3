@@ -1,6 +1,5 @@
-using EL_t3.Core.Entities;
-using EL_t3.Core.Interfaces.Repository;
-using Microsoft.EntityFrameworkCore;
+using EL_t3.Application.Common.Interfaces.Repository;
+using EL_t3.Domain.Entities;
 
 namespace EL_t3.Infrastructure.Database.Repository;
 

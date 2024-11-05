@@ -1,7 +1,4 @@
-using EL_t3.API.Contracts.Player;
-using EL_t3.Core.Actions.Grid.Queries.GetRandomGrid;
-using EL_t3.Core.Actions.Player.Queries.CheckConstraints;
-using EL_t3.Core.Actions.Player.Queries.PlayerAutocomplete;
+using EL_t3.Application.Grid.Queries.GetRandomGrid;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

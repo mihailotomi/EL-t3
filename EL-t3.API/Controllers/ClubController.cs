@@ -1,4 +1,4 @@
-using EL_t3.Core.Actions.Club.Queries;
+using EL_t3.Application.Club.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ public class ClubController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> GetClubById(int id)
     {
-        var query = new GetClubByIdQuery(id);
+        var query = new GetClubById.Query(id);
 
         var result = await _mediator.Send(query);
         return Ok(result);

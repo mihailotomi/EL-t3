@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EL-t3.Core\EL-t3.Core.csproj" />
+    <ProjectReference Include="..\EL-t3.Core\EL-t3.Application.csproj" />
     <ProjectReference Include="..\EL-t3.Infrastructure\EL-t3.Infrastructure.csproj" />
   </ItemGroup>
 

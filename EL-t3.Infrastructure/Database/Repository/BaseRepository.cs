@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using EL_t3.Core.Interfaces.Repository;
+using EL_t3.Application.Common.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace EL_t3.Infrastructure.Database.Repository;
@@ -41,14 +41,14 @@ where TEntity : class
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match, Expression<Func<TEntity, TEntity, TEntity>> whenMatched)
+    public async Task UpsertManyAsync(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> match, Expression<Func<TEntity, TEntity, TEntity>> whenMatched, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entities);
 
         await DbSet.UpsertRange(entities)
             .On(match)
             .WhenMatched(whenMatched)
-            .RunAsync();
+            .RunAsync(cancellationToken);
         await _context.SaveChangesAsync();
     }
 

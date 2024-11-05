@@ -1,5 +1,5 @@
-using EL_t3.Core.Entities;
-using EL_t3.Core.Interfaces.Gateway;
+using EL_t3.Application.Common.Interfaces.Gateway;
+using EL_t3.Domain.Entities;
 using EL_t3.Infrastructure.Gateway.Contracts;
 using EL_t3.Infrastructure.Gateway.Helpers;
 using HtmlAgilityPack;

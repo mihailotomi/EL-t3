@@ -1,4 +1,4 @@
-using EL_t3.Core.Entities;
+using EL_t3.Domain.Entities;
 using EL_t3.Infrastructure.Gateway.Contracts;
 
 namespace EL_t3.Infrastructure.Gateway.Extensions;

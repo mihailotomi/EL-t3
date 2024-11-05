@@ -1,10 +1,9 @@
-using EL_t3.Core.Entities;
-using EL_t3.Core.Interfaces.Gateway;
+using EL_t3.Application.Common.Interfaces.Gateway;
+using EL_t3.Domain.Entities;
 using EL_t3.Infrastructure.Gateway.Contracts;
-using System.Net.Http.Json;
 using EL_t3.Infrastructure.Gateway.Extensions;
-
 using EL_t3.Infrastructure.Gateway.Validators;
+using System.Net.Http.Json;
 
 namespace EL_t3.Infrastructure.Gateway;
 

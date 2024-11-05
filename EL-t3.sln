@@ -3,21 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.API", "EL-t3.API\EL-t3.API.csproj", "{9EE026C2-37A5-453A-97DA-2FC1BDBB6453}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.API", "EL-t3.API\EL-t3.API.csproj", "{9EE026C2-37A5-453A-97DA-2FC1BDBB6453}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.Core", "EL-t3.Core\EL-t3.Core.csproj", "{9CBCE93E-E43D-4A1F-A429-E4A5681070E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.Application", "EL-t3.Core\EL-t3.Application.csproj", "{9CBCE93E-E43D-4A1F-A429-E4A5681070E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.Infrastructure", "EL-t3.Infrastructure\EL-t3.Infrastructure.csproj", "{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.Infrastructure", "EL-t3.Infrastructure\EL-t3.Infrastructure.csproj", "{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.CLI", "EL-t3.CLI\EL-t3.CLI.csproj", "{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.CLI", "EL-t3.CLI\EL-t3.CLI.csproj", "{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EL-t3.Domain", "EL-t3.Domain\EL-t3.Domain.csproj", "{95BA05C2-2AC6-4640-9AA0-E7BCEC88BE65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9EE026C2-37A5-453A-97DA-2FC1BDBB6453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +35,12 @@ Global
 		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04B78DD7-E863-4A8D-B1AE-4E7F7186C57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95BA05C2-2AC6-4640-9AA0-E7BCEC88BE65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95BA05C2-2AC6-4640-9AA0-E7BCEC88BE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95BA05C2-2AC6-4640-9AA0-E7BCEC88BE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95BA05C2-2AC6-4640-9AA0-E7BCEC88BE65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

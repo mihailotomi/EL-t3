@@ -25,7 +25,7 @@ namespace EL_t3.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EL_t3.Core.Entities.Club", b =>
+            modelBuilder.Entity("EL_t3.Domain.Entities.Club", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,7 +72,7 @@ namespace EL_t3.Infrastructure.Migrations
                     b.ToTable("clubs", (string)null);
                 });
 
-            modelBuilder.Entity("EL_t3.Core.Entities.Player", b =>
+            modelBuilder.Entity("EL_t3.Domain.Entities.Player", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace EL_t3.Infrastructure.Migrations
                     b.ToTable("players", (string)null);
                 });
 
-            modelBuilder.Entity("EL_t3.Core.Entities.PlayerSeason", b =>
+            modelBuilder.Entity("EL_t3.Domain.Entities.PlayerSeason", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -177,15 +177,15 @@ namespace EL_t3.Infrastructure.Migrations
                     b.ToTable("player_seasons", (string)null);
                 });
 
-            modelBuilder.Entity("EL_t3.Core.Entities.PlayerSeason", b =>
+            modelBuilder.Entity("EL_t3.Domain.Entities.PlayerSeason", b =>
                 {
-                    b.HasOne("EL_t3.Core.Entities.Club", "Club")
+                    b.HasOne("EL_t3.Domain.Entities.Club", "Club")
                         .WithMany()
                         .HasForeignKey("ClubId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EL_t3.Core.Entities.Player", "Player")
+                    b.HasOne("EL_t3.Domain.Entities.Player", "Player")
                         .WithMany("SeasonsPlayed")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -196,7 +196,7 @@ namespace EL_t3.Infrastructure.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("EL_t3.Core.Entities.Player", b =>
+            modelBuilder.Entity("EL_t3.Domain.Entities.Player", b =>
                 {
                     b.Navigation("SeasonsPlayed");
                 });

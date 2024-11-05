@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using EL_t3.Core.Behaviors;
+using EL_t3.Application.Common.Behaviors;
 
-namespace EL_t3.Core;
+namespace EL_t3.Application;
 
 public static class DependencyInjection
 {
