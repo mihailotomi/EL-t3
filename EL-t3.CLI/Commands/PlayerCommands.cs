@@ -33,15 +33,15 @@ namespace EL_t3.CLI.Commands
         }
 
         [Command("seed-players", Description = "Seeds players and player-seasons for all seasons from 2000 onward")]
-        public async Task SeedPlayers(string source, CancellationToken cancellationToken)
+        public async Task SeedPlayers([Option('s')] string source)
         {
             switch (source)
             {
                 case "euroleague":
-                    await SeedPlayersEuroleague(cancellationToken);
+                    await SeedPlayersEuroleague(default);
                     break;
                 case "proballers":
-                    await SeedPlayersProballers(cancellationToken);
+                    await SeedPlayersProballers(default);
                     break;
                 default:
                     throw new ArgumentException("Unknown source");

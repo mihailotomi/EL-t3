@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\EL-t3.Core\EL-t3.Application.csproj" />
+    <ProjectReference Include="..\EL-t3.Application\EL-t3.Application.csproj" />
     <ProjectReference Include="..\EL-t3.Infrastructure\EL-t3.Infrastructure.csproj" />
   </ItemGroup>
 
@@ -12,6 +12,12 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>

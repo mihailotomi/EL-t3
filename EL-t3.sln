@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.API", "EL-t3.API\EL-t3.API.csproj", "{9EE026C2-37A5-453A-97DA-2FC1BDBB6453}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.Application", "EL-t3.Core\EL-t3.Application.csproj", "{9CBCE93E-E43D-4A1F-A429-E4A5681070E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.Application", "EL-t3.Application\EL-t3.Application.csproj", "{9CBCE93E-E43D-4A1F-A429-E4A5681070E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EL-t3.Infrastructure", "EL-t3.Infrastructure\EL-t3.Infrastructure.csproj", "{BE03B146-EC28-4C52-8FF4-4AC9F23F6D56}"
 EndProject

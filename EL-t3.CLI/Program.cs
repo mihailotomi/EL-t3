@@ -1,14 +1,17 @@
 ﻿using Cocona;
+using EL_t3.Application;
 using EL_t3.CLI.Commands;
 using EL_t3.Infrastructure;
 using EL_t3.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 var builder = CoconaApp.CreateBuilder();
 
 {
+    builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
     builder.Services.AddHttpClient("euroleague-api", client =>
     {
         client.BaseAddress = new Uri("https://api-live.euroleague.net");
@@ -17,10 +20,12 @@ var builder = CoconaApp.CreateBuilder();
     {
         client.BaseAddress = new Uri("https://www.proballers.com");
     });
-    builder.Services.AddGateways();
-    builder.Services.AddRepositories();
     builder.Services.AddDbContext<AppDatabaseContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Services.AddGateways();
+    builder.Services.AddCore();
+    builder.Services.AddRepositories();
+    builder.Logging.AddConsole();
 }
 
 var app = builder.Build();
