@@ -1,5 +1,5 @@
 using EL_t3.Application.Common.Exceptions;
-using EL_t3.Application.Player.Queries.CheckConstraints;
+using EL_t3.Application.Player.Queries;
 using EL_t3.Domain.Entities;
 
 namespace EL_t3.API.Contracts.Player;

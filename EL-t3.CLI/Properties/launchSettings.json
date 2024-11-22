@@ -2,7 +2,7 @@
   "profiles": {
     "EL-t3.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "seed-players -s proballers"
+      "commandLineArgs": "disjoint-players"
     }
   }
 }

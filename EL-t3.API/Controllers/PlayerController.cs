@@ -1,6 +1,5 @@
 using EL_t3.API.Contracts.Player;
-using EL_t3.Application.Player.Queries.CheckConstraints;
-using EL_t3.Application.Player.Queries.PlayerAutocomplete;
+using EL_t3.Application.Player.Queries;
 using EL_t3.Domain.Entities;
 using Mapster;
 using MediatR;
@@ -21,7 +20,7 @@ public class PlayerController : Controller
     [HttpGet("autocomplete")]
     public async Task<IActionResult> NameAutocomplete(string search)
     {
-        var query = new PlayerAutocompleteQuery(search);
+        var query = new PlayerAutocomplete.Query(search);
 
         var result = await _mediator.Send(query);
 
