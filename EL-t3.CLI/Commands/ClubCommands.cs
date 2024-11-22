@@ -1,4 +1,5 @@
 using Cocona;
+using Cocona.Application;
 using EL_t3.Application.Club.Commands;
 using MediatR;
 
@@ -14,9 +15,11 @@ public class ClubCommands
     }
 
     [Command("seed-clubs", Description = "Seeds clubs for all seasons from 2000 onward")]
-    public async Task SeedClubs()
+    public async Task SeedClubs([FromService] ICoconaAppContextAccessor contextAccessor)
     {
+        var ctx = contextAccessor.Current ?? throw new InvalidOperationException();
+
         var command = new SeedClubs.Command();
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, ctx.CancellationToken);
     }
 }

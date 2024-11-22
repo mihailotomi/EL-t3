@@ -62,7 +62,6 @@ public class ProballersHtmlParsingHelper
 
         foreach (var node in playerNameContainer.ChildNodes)
         {
-            if (node.NodeType == HtmlNodeType.Text || node.Name == "br")
             {
                 var text = node.InnerText.Trim();
                 if (!string.IsNullOrEmpty(text))
@@ -76,7 +75,18 @@ public class ProballersHtmlParsingHelper
         var imageUrlNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'identity__picture--player')]//img");
         var imageUrl = imageUrlNode?.GetAttributeValue("src", string.Empty);
 
-        var birthDateAndAgeNode = doc.DocumentNode.SelectSingleNode("//ul[contains(@class, 'identity__profil')]/*[1]");
+        var profileDiv = doc.DocumentNode.SelectSingleNode("//div[@class='identity__stats__profil']");
+        if (profileDiv is null)
+        {
+            throw new ArgumentException(nameof(profileDiv), "Player birth date container not found");
+        }
+        var dateOfBirthDiv = profileDiv.SelectSingleNode(".//div[span[contains(text(), 'Date of birth')]]");
+        if (dateOfBirthDiv is null)
+        {
+            throw new ArgumentException(nameof(dateOfBirthDiv), "Player birth date container not found");
+        }
+        var birthDateAndAgeNode = dateOfBirthDiv.SelectSingleNode(".//span[@class='info']");
+
         if (birthDateAndAgeNode == null)
         {
             throw new ArgumentException(nameof(birthDateAndAgeNode), "Player birth date container not found");

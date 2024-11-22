@@ -9,11 +9,23 @@ var builder = WebApplication.CreateBuilder(args);
 var developmentAllowedOrigin = "development_allowed_origin";
 
 {
+    builder.Services.AddHttpClient("euroleague-api", client =>
+    {
+        client.BaseAddress = new Uri("https://api-live.euroleague.net");
+    });
+    builder.Services.AddHttpClient("proballers", client =>
+    {
+        client.BaseAddress = new Uri("https://www.proballers.com");
+    });
+
     builder.Services.AddDbContext<AppDatabaseContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddCore();
     builder.Services.AddRepositories();
     builder.Services.AddControllers();
+    builder.Services.AddGateways();
+    builder.Logging.AddConsole();
+
     builder.Services.AddSwaggerGen();
     builder.Services.AddCors(options =>
 {

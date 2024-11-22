@@ -1,6 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using FluentValidation;
 using EL_t3.Application.Common.Behaviors;
+using EL_t3.Application.Player.Helpers;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EL_t3.Application;
 
@@ -15,6 +16,7 @@ public static class DependencyInjection
 
         });
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
+        services.AddScoped<PlayerSeedHelper>();
 
         return services;
     }
