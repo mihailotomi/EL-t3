@@ -2,7 +2,7 @@
   "profiles": {
     "EL-t3.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "disjoint-players"
+      "commandLineArgs": "merge-players --p1 10625 --p2 2679 --d 1"
     }
   }
 }

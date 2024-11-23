@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EL_t3.Application.Player.Queries;
 
+public record DisjointPlayers(Domain.Entities.Player Player1, Domain.Entities.Player Player2);
+
 public class FindDisjointPlayers
 {
-    public record DisjointPlayers(Domain.Entities.Player Player1, Domain.Entities.Player Player2);
-
     public record Query() : IRequest<IEnumerable<DisjointPlayers>>;
 
 
