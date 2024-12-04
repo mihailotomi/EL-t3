@@ -1,3 +1,4 @@
+using EL_t3.Application.Club.DTOs;
 using EL_t3.Application.Common.Exceptions;
 using EL_t3.Application.Common.Interfaces.Context;
 using EL_t3.Domain.Entities;
@@ -47,7 +48,7 @@ public class GetRandomGrid
             };
         }
 
-        private async Task<IList<Domain.Entities.Club>> GetRandomGridClubs(int amount)
+        private async Task<IList<ClubDTO>> GetRandomGridClubs(int amount)
         {
             var topClubs = await (from ps1 in _context.PlayerSeasons
                                   join ps2 in _context.PlayerSeasons
@@ -63,7 +64,7 @@ public class GetRandomGrid
                                       club.UpdatedAt
                                   } into g
                                   orderby g.Count() descending
-                                  select new Domain.Entities.Club()
+                                  select new ClubDTO()
                                   {
                                       Id = g.Key.Id,
                                       Name = g.Key.Name,
@@ -137,7 +138,7 @@ public class GetRandomGrid
             }
         }
 
-        private IQueryable<ClubCommonPlayersPayload> ClubConstraintSq(int clubId)
+        private IQueryable<ClubCommonPlayersPayload> ClubConstraintSq(long clubId)
         {
             return from ps1 in _context.PlayerSeasons
                    join ps2 in _context.PlayerSeasons
@@ -185,7 +186,7 @@ public class GetRandomGrid
 
         private class ClubCommonPlayersPayload
         {
-            public int ClubId { get; set; }
+            public long ClubId { get; set; }
             public int Num { get; set; }
         };
     }

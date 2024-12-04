@@ -1,5 +1,6 @@
+using EL_t3.Application.Club.Payloads;
 using EL_t3.Application.Common.Interfaces.Gateway;
-using EL_t3.Domain.Entities;
+using EL_t3.Application.Player.Payloads;
 using EL_t3.Infrastructure.Gateway.Contracts;
 using EL_t3.Infrastructure.Gateway.Extensions;
 using EL_t3.Infrastructure.Gateway.Validators;
@@ -7,7 +8,7 @@ using System.Net.Http.Json;
 
 namespace EL_t3.Infrastructure.Gateway;
 
-public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
+public class EuroleagueApiGateway : IClubBySeasonGateway, IPlayerBySeasonGateway
 {
     private readonly HttpClient _client;
 
@@ -16,7 +17,7 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
         _client = httpClientFactory.CreateClient("euroleague-api");
     }
 
-    public async Task<(IEnumerable<Club> clubs, IEnumerable<string> errors)> FetchClubsBySeasonAsync(int season)
+    public async Task<(IEnumerable<CreateClubPayload> payloads, IEnumerable<string> errors)> FetchClubsBySeasonAsync(int season)
     {
         var response = await _client.GetFromJsonAsync<GatewayListResponse<GatewayClub>>($"/v2/competitions/E/seasons/E{season}/clubs");
 
@@ -27,7 +28,7 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
 
         var validator = new GatewayClubValidator();
 
-        var validClubs = new List<Club>();
+        var validClubs = new List<CreateClubPayload>();
         var validationErrors = new List<string>();
 
         foreach (var gc in response.Data)
@@ -35,7 +36,15 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
             var validationResult = validator.Validate(gc);
             if (validationResult.IsValid)
             {
-                validClubs.Add(gc.MapToClubEntity());
+                try
+                {
+                    var payload = gc.ToPayload();
+                    validClubs.Add(payload);
+                }
+                catch (Exception e)
+                {
+                    validationErrors.Add(e.Message);
+                }
             }
             else
             {
@@ -46,13 +55,13 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
         return (validClubs, validationErrors);
     }
 
-    public async Task<(IEnumerable<PlayerSeason> playerSeasons, IEnumerable<string> errors)> FetchPlayerSeasonsBySeasonAsync(int season)
+    public async Task<(IEnumerable<CreatePlayerSeasonPayload> playerSeasons, IEnumerable<string> errors)> FetchPlayerSeasonsBySeasonAsync(int season)
     {
         var response = await _client.GetFromJsonAsync<GatewayListResponse<GatewayPlayerSeason>>($"/v2/competitions/E/seasons/E{season}/people?personType=J");
 
         var validator = new GatewayPlayerSeasonValidator();
 
-        var validPlayerSeasons = new List<PlayerSeason>();
+        var validPlayerSeasons = new List<CreatePlayerSeasonPayload>();
         var validationErrors = new List<string>();
 
         if (response == null || response.Data == null)
@@ -65,7 +74,7 @@ public class EuroleagueApiGateway : IClubGateway, IPlayerBySeasonGateway
             var validationResult = validator.Validate(ps);
             if (validationResult.IsValid)
             {
-                validPlayerSeasons.Add(ps.MapToPlayerSeasonEntity());
+                validPlayerSeasons.Add(ps.ToPayload());
             }
             else
             {

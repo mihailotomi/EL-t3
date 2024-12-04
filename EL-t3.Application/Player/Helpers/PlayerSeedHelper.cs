@@ -1,4 +1,5 @@
 ﻿using EL_t3.Application.Common.Interfaces.Context;
+using EL_t3.Application.Player.Payloads;
 using EL_t3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +19,10 @@ public class PlayerSeedHelper
     /// </summary>
     /// <param name="playerSeasons"></param>
     /// <returns>A list of players</returns>
-    public static List<Domain.Entities.Player> ExtractUniquePlayersFromPlayerSeasons(IEnumerable<PlayerSeason> playerSeasons)
+    public static List<Domain.Entities.Player> ExtractUniquePlayersFromPlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> playerSeasons)
     {
         return playerSeasons
-            .Select(ps => ps.Player)
+            .Select(ps => new Domain.Entities.Player() { FirstName = ps.FirstName, LastName = ps.LastName, BirthDate = ps.BirthDate, Country = ps.Country, ImageUrl = ps.ImageUrl })
             .Where(p => p != null)
             .GroupBy(p => new { p!.FirstName, p!.LastName, p!.BirthDate })
             .Select(g => g.First()!)
@@ -34,18 +35,18 @@ public class PlayerSeedHelper
     /// <param name="rawPlayerSeasons">An enumerable of player seasons, without club and player ids, typically obtained directly from data source.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A list of proccessed player seasons</returns>
-    public async Task<IList<PlayerSeason>> PreparePlayerSeasons(IEnumerable<PlayerSeason> rawPlayerSeasons, CancellationToken cancellationToken)
+    public async Task<IList<PlayerSeason>> PreparePlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> rawPlayerSeasons, CancellationToken cancellationToken)
     {
         var playerSeasons = new List<PlayerSeason>();
 
         foreach (var ps in rawPlayerSeasons)
         {
-            var club = await _dbContext.Clubs.Where(c => c.Code == ps.Club!.Code).FirstOrDefaultAsync(cancellationToken);
+            var club = await _dbContext.Clubs.Where(c => c.Code == ps.ClubCode).FirstOrDefaultAsync(cancellationToken);
             var player = await _dbContext.Players
                 .Where(p =>
-                    p.FirstName == ps.Player!.FirstName &&
-                    p.LastName == ps.Player.LastName &&
-                    p.BirthDate == ps.Player.BirthDate)
+                    p.FirstName == ps.FirstName &&
+                    p.LastName == ps.LastName &&
+                    p.BirthDate == ps.BirthDate)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (player == null || club == null)
@@ -54,10 +55,18 @@ public class PlayerSeedHelper
                 continue;
             }
 
-            ps.ClubId = club!.Id;
-            ps.PlayerId = player!.Id;
+            var playerSeason = new PlayerSeason()
+            {
+                PlayerId = player.Id,
+                ClubId = club.Id,
+                Season = ps.Season,
+                StartDate = ps.StartedAt,
+                EndDate = ps.EndedAt,
+            };
 
-            playerSeasons.Add(ps);
+
+
+            playerSeasons.Add(playerSeason);
         }
 
         return playerSeasons;
