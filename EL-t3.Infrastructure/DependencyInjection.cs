@@ -13,9 +13,10 @@ public static class DependencyInjection
     public static IServiceCollection AddGateways(this IServiceCollection services)
     {
         services.AddSingleton<EuroleagueApiGateway>();
-        services.AddSingleton<IClubGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
+        services.AddSingleton<IClubBySeasonGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
         services.AddSingleton<IPlayerBySeasonGateway>(sp => sp.GetService<EuroleagueApiGateway>()!);
         services.AddSingleton<IPlayerByClubGateway, ProballersGateway>();
+        services.AddSingleton<IAllClubsGateway, ProballersGateway>();
 
         return services;
     }

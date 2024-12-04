@@ -23,7 +23,7 @@ public class ClubConfiguration : IEntityTypeConfiguration<Club>
         builder.Property(c => c.Code)
                .HasColumnName("code")
                .IsRequired()
-               .HasMaxLength(3);
+               .HasMaxLength(10);
 
         builder.Property(c => c.CrestUrl)
                .HasColumnName("crest_url");

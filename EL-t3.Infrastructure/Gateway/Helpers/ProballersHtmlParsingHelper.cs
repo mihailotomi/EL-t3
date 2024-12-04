@@ -1,4 +1,5 @@
-using EL_t3.Domain.Entities;
+using EL_t3.Application.Club.Payloads;
+using EL_t3.Application.Player.Payloads;
 using EL_t3.Infrastructure.Gateway.Contracts;
 using HtmlAgilityPack;
 
@@ -6,6 +7,37 @@ namespace EL_t3.Infrastructure.Gateway.Helpers;
 
 public class ProballersHtmlParsingHelper
 {
+    public static CreateClubPayload ParseClubData(HtmlDocument doc, string clubCode)
+    {
+        var identityCardNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'identity__card')]");
+        if (identityCardNode is null)
+        {
+            throw new ArgumentNullException(nameof(identityCardNode), $"identityCardNode not found on page for club {clubCode}");
+        }
+
+        var nameNode = identityCardNode.SelectSingleNode(".//h1[@class='identity__name']/span[@class='lastname']");
+        if (nameNode is null)
+        {
+            throw new ArgumentNullException(nameof(nameNode), $"nameNode not found on page for club {clubCode}");
+        }
+        if (nameNode.InnerText is null)
+        {
+            throw new ArgumentNullException(nameof(nameNode), $"nameNode is empty for club {clubCode}");
+        }
+
+        string name = nameNode.InnerText.Trim();
+
+        var imgNode = identityCardNode.SelectSingleNode(".//div[contains(@class, 'identity__picture')]//img");
+        if (imgNode is null)
+        {
+            throw new ArgumentNullException(nameof(nameNode), $"imgNode not found on page for club {clubCode}");
+        }
+
+        string crestUrl = imgNode.GetAttributeValue("src", string.Empty);
+
+        return new CreateClubPayload(Code: clubCode, Name: name, CrestUrl: crestUrl);
+    }
+
     public static (IEnumerable<ProballersIntermediateDto>, IList<string>) ParseIntermediateDtos(HtmlDocument doc, string clubCode)
     {
         var contentDiv = doc.DocumentNode.SelectSingleNode("//div[contains(@id, 'player-all')]");
@@ -50,7 +82,7 @@ public class ProballersHtmlParsingHelper
         return (intermediateDtoList, playerFailureList);
     }
 
-    public static IEnumerable<PlayerSeason> ParsePlayerData(HtmlDocument doc, IEnumerable<int> seasons, string clubCode)
+    public static IEnumerable<CreatePlayerSeasonPayload> ParsePlayerData(HtmlDocument doc, IEnumerable<int> seasons, string clubCode)
     {
         var playerNameContainer = doc.DocumentNode.SelectSingleNode("//h1[contains(@class, 'identity__name')]");
         if (playerNameContainer == null || !playerNameContainer.HasChildNodes)
@@ -70,7 +102,6 @@ public class ProballersHtmlParsingHelper
                 }
             }
         }
-
 
         var imageUrlNode = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'identity__picture--player')]//img");
         var imageUrl = imageUrlNode?.GetAttributeValue("src", string.Empty);
@@ -104,23 +135,17 @@ public class ProballersHtmlParsingHelper
         var nationality = nationalityNode != null ? nationalityNode?.InnerText.Trim() : null;
         var country = nationality != null ? NationalityMapHelper.NationalityToCountryISO(nationality) : null;
 
-        return seasons.Select(s => new PlayerSeason()
-        {
-            Player = new Player()
-            {
-                FirstName = names[0].ToUpper().Trim(),
-                LastName = names[1].ToUpper().Trim(),
-                ImageUrl = imageUrl == null || imageUrl.Contains("head-par-defaut") ? null : imageUrl,
-                BirthDate = DateOnly.Parse(birthDate),
-                Country = country,
-            },
-            Season = s,
-            Club = new Club()
-            {
-                Name = "",
-                Code = clubCode
-            }
-        });
+        return seasons.Select(s => new CreatePlayerSeasonPayload(
+                FirstName: names[0].ToUpper().Trim(),
+                LastName: names[1].ToUpper().Trim(),
+                ImageUrl: imageUrl == null || imageUrl.Contains("head-par-defaut") ? null : imageUrl,
+                BirthDate: DateOnly.Parse(birthDate),
+                Country: country,
+                Season: s,
+                ClubCode: clubCode,
+                StartedAt: new DateOnly(s, 9, 1),
+                EndedAt: new DateOnly(s + 1, 6, 30)
+            ));
     }
 
     private static ProballersIntermediateDto ParsePlayerTableRow(HtmlNode? row)
