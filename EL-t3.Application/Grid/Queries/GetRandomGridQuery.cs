@@ -5,7 +5,7 @@ using EL_t3.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace EL_t3.Application.Grid.Queries.GetRandomGrid;
+namespace EL_t3.Application.Grid.Queries;
 
 
 public class GetRandomGrid

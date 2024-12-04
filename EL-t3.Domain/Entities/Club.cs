@@ -3,15 +3,12 @@ using System.Linq.Expressions;
 namespace EL_t3.Domain.Entities;
 public class Club : BaseEntity
 {
-    public string Name { get; private set; }
-    public string Code { get; private set; }
-    public string CrestUrl { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string Code { get; private set; } = string.Empty;
+    public string CrestUrl { get; private set; } = string.Empty;
 
     private Club()
     {
-        Name = default!;
-        Code = default!;
-        CrestUrl = default!;
     }
 
     private Club(string name, string code, string crestUrl)
@@ -39,6 +36,5 @@ public class Club : BaseEntity
         Code = cDb.Code,
         CrestUrl = cDb.CrestUrl ?? cIns.CrestUrl
     };
-
 }
 

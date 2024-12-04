@@ -15,14 +15,14 @@ public class PlayerSeedHelper
     }
 
     /// <summary>
-    /// Extracts all unique players in a PlayerSeason enumerable.
+    /// Extracts all unique players in a CreatePlayerSeasonPayload enumerable and prepares Players for persistence.
     /// </summary>
     /// <param name="playerSeasons"></param>
     /// <returns>A list of players</returns>
-    public static List<Domain.Entities.Player> ExtractUniquePlayersFromPlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> playerSeasons)
+    public static List<Domain.Entities.Player> PrepeareUniquePlayersFromPlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> playerSeasons)
     {
         return playerSeasons
-            .Select(ps => new Domain.Entities.Player() { FirstName = ps.FirstName, LastName = ps.LastName, BirthDate = ps.BirthDate, Country = ps.Country, ImageUrl = ps.ImageUrl })
+            .Select(rp => Domain.Entities.Player.Create(rp.FirstName, rp.LastName, rp.BirthDate, rp.Country, rp.ImageUrl))
             .Where(p => p != null)
             .GroupBy(p => new { p!.FirstName, p!.LastName, p!.BirthDate })
             .Select(g => g.First()!)
@@ -30,9 +30,9 @@ public class PlayerSeedHelper
     }
 
     /// <summary>
-    /// Adds the club and player id to a PlayerSeason without it, while removing duplicates.
+    /// Adds the club and player id to a CreatePlayerSeasonPayload, while removing duplicates and preparing domain entities for persistence.
     /// </summary>
-    /// <param name="rawPlayerSeasons">An enumerable of player seasons, without club and player ids, typically obtained directly from data source.</param>
+    /// <param name="rawPlayerSeasons">An enumerable of player season paayloads, without club and player ids, typically obtained directly from data source.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A list of proccessed player seasons</returns>
     public async Task<IList<PlayerSeason>> PreparePlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> rawPlayerSeasons, CancellationToken cancellationToken)
@@ -55,14 +55,14 @@ public class PlayerSeedHelper
                 continue;
             }
 
-            var playerSeason = new PlayerSeason()
-            {
-                PlayerId = player.Id,
-                ClubId = club.Id,
-                Season = ps.Season,
-                StartDate = ps.StartedAt,
-                EndDate = ps.EndedAt,
-            };
+            var playerSeason = PlayerSeason.Create
+            (
+                playerId: player.Id,
+                clubId: club.Id,
+                season: ps.Season,
+                startDate: ps.StartedAt,
+                endDate: ps.EndedAt
+            );
 
             playerSeasons.Add(playerSeason);
         }

@@ -66,9 +66,9 @@ public class MergePlayers
             {
                 playerToKeep.SeasonsPlayed!.Add(seasonPlayed);
             }
-            if (playerToKeep.ImageUrl == null && playerToRemove.ImageUrl != null)
+            if (playerToRemove.ImageUrl != null)
             {
-                playerToKeep.ImageUrl = playerToRemove.ImageUrl;
+                playerToKeep.UpdateImageUrlIfNone(playerToRemove.ImageUrl);
             }
 
             // player seasons that are duplicates (both player1 and player2 instances)

@@ -40,25 +40,20 @@ public class SeedPlayersBySeason
                     allErrors.AddRange(seasonErrors);
                 }
 
-                var rawPlayers = PlayerSeedHelper.ExtractUniquePlayersFromPlayerSeasons(rawPlayerSeasons);
+                var rawPlayers = PlayerSeedHelper.PrepeareUniquePlayersFromPlayerSeasons(rawPlayerSeasons);
 
-                await _dbContext.Players.UpsertRange(rawPlayers)
+                var players = rawPlayers.Select(rp => Domain.Entities.Player.Create(rp.FirstName, rp.LastName, rp.BirthDate, rp.Country, rp.ImageUrl));
+
+                await _dbContext.Players.UpsertRange(players)
                     .On((p) => new { p.FirstName, p.LastName, p.BirthDate })
-                    .WhenMatched((pDb, pIns) => new Domain.Entities.Player()
-                    {
-                        FirstName = pDb.FirstName,
-                        LastName = pDb.LastName,
-                        BirthDate = pDb.BirthDate,
-                        ImageUrl = pDb.ImageUrl ?? pIns.ImageUrl,
-                        Country = pDb.Country ?? pIns.Country,
-                    })
+                    .WhenMatched(Domain.Entities.Player.Upserter)
                     .RunAsync(cancellationToken);
 
                 var preparedPlayerSeasons = await _playerSeedHelper.PreparePlayerSeasons(rawPlayerSeasons, cancellationToken);
 
                 await _dbContext.PlayerSeasons.UpsertRange(preparedPlayerSeasons)
                     .On((p) => new { p.PlayerId, p.ClubId, p.Season })
-                    .WhenMatched((psDb, psIns) => new PlayerSeason() { })
+                    .WhenMatched(PlayerSeason.Upserter)
                     .RunAsync(cancellationToken);
 
                 _logger.LogInformation("Finished seeding players for season {season}", season);

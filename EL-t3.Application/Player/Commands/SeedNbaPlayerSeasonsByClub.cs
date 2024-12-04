@@ -45,7 +45,7 @@ public class SeedNbaPlayerSeasonsByClub
                 await _dbContext.PlayerSeasons
                     .UpsertRange(preparedPlayerSeasons)
                     .On((p) => new { p.PlayerId, p.ClubId, p.Season })
-                    .WhenMatched((psDb, psIns) => new PlayerSeason() { })
+                    .WhenMatched(PlayerSeason.Upserter)
                     .RunAsync(cancellationToken);
 
                 _logger.LogInformation("Finished seeding players for club {club}", clubCode);

@@ -1,4 +1,4 @@
-using EL_t3.Application.Grid.Queries.GetRandomGrid;
+using EL_t3.Application.Grid.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ public class GridController : Controller
     [HttpGet("random")]
     public async Task<IActionResult> GetRandom()
     {
-        var query = new GetRandomGridQuery();
+        var query = new GetRandomGrid.Query();
 
         var result = await _mediator.Send(query);
         return Ok(result);
