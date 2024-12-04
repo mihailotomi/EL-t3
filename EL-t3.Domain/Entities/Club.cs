@@ -9,7 +9,9 @@ public class Club : BaseEntity
 
     private Club()
     {
-
+        Name = default!;
+        Code = default!;
+        CrestUrl = default!;
     }
 
     private Club(string name, string code, string crestUrl)

@@ -64,8 +64,6 @@ public class PlayerSeedHelper
                 EndDate = ps.EndedAt,
             };
 
-
-
             playerSeasons.Add(playerSeason);
         }
 

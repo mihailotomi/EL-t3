@@ -1,5 +1,5 @@
 ﻿namespace EL_t3.Infrastructure.Gateway.Helpers;
-public class NbaClubUriHelper
+public class ProballersNbaUriHelper : IProballersUriHelper
 {
     // A club can have multiple pages on proballers - because Crvena Zvezda is FMP
     // Thank you doc. Nebojsa Covic
@@ -42,7 +42,7 @@ public class NbaClubUriHelper
     /// </summary>
     /// <param name="clubCode">Club code in the app</param>
     /// <returns>An array of club URIs (club can have multiple pages on Proballers - e. g. Crvena Zvezda)</returns>
-    public static string[] GetClubUri(string clubCode)
+    public string[] GetClubUri(string clubCode)
     {
         ClubUriMap.TryGetValue(clubCode, out var clubUris);
         if (clubUris == null)
@@ -53,7 +53,7 @@ public class NbaClubUriHelper
         return clubUris;
     }
 
-    public static IEnumerable<string> GetCodes()
+    public IEnumerable<string> GetCodes()
     {
         return ClubUriMap.Keys;
     }

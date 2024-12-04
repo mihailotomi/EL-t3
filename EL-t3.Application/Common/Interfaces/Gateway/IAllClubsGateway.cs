@@ -4,5 +4,5 @@ namespace EL_t3.Application.Common.Interfaces.Gateway;
 
 public interface IAllClubsGateway
 {
-    Task<(IEnumerable<CreateClubPayload> payloads, IEnumerable<string> errors)> FetchAllClubs(CancellationToken cancellationToken = default);
+    Task<(IEnumerable<CreateClubPayload> payloads, IEnumerable<string> errors)> FetchAllClubs(bool isNba = false, CancellationToken cancellationToken = default);
 }

@@ -4,5 +4,5 @@ namespace EL_t3.Application.Common.Interfaces.Gateway;
 
 public interface IPlayerByClubGateway
 {
-    Task<(IEnumerable<CreatePlayerSeasonPayload> playerSeasons, IEnumerable<string> errors)> FetchPlayersSeasonsByClubAsync(string clubCode, CancellationToken cancellationToken = default);
+    Task<(IEnumerable<CreatePlayerSeasonPayload> playerSeasons, IEnumerable<string> errors)> FetchPlayersSeasonsByClubAsync(string clubCode, bool isNba = false, CancellationToken cancellationToken = default);
 }

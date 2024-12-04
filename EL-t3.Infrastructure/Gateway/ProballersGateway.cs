@@ -10,15 +10,17 @@ namespace EL_t3.Infrastructure.Gateway;
 public class ProballersGateway : IPlayerByClubGateway, IAllClubsGateway
 {
     private readonly HttpClient _client;
+    private readonly ProballersNbaUriHelper _nbaUriHelper = new();
+    private readonly ProballersEuroleagueUriHelper _euroleagueUriHelper = new();
 
     public ProballersGateway(IHttpClientFactory httpClientFactory)
     {
         _client = httpClientFactory.CreateClient("proballers");
     }
 
-    public async Task<(IEnumerable<CreatePlayerSeasonPayload> playerSeasons, IEnumerable<string> errors)> FetchPlayersSeasonsByClubAsync(string clubCode, CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<CreatePlayerSeasonPayload> playerSeasons, IEnumerable<string> errors)> FetchPlayersSeasonsByClubAsync(string gatewayClubCode, bool isNba = false, CancellationToken cancellationToken = default)
     {
-        var (intermediateDtoList, intermediateFailureList) = await GetIntermediateDtoList(clubCode, cancellationToken);
+        var (intermediateDtoList, intermediateFailureList) = await GetIntermediateDtoList(gatewayClubCode, isNba, cancellationToken);
         var playerSeasons = new List<CreatePlayerSeasonPayload>();
         var failureList = intermediateFailureList;
 
@@ -37,7 +39,8 @@ public class ProballersGateway : IPlayerByClubGateway, IAllClubsGateway
                 var doc = new HtmlDocument();
                 doc.LoadHtml(htmlContent);
 
-                var playerSeasonList = ProballersHtmlParsingHelper.ParsePlayerData(doc, intermediateDto.Seasons, clubCode);
+                var clubCodeInDb = isNba ? gatewayClubCode + "-NBA" : gatewayClubCode;
+                var playerSeasonList = ProballersHtmlParsingHelper.ParsePlayerData(doc, intermediateDto.Seasons, clubCodeInDb);
                 playerSeasons.AddRange(playerSeasonList);
 
             }
@@ -55,15 +58,16 @@ public class ProballersGateway : IPlayerByClubGateway, IAllClubsGateway
         return (playerSeasons, failureList);
     }
 
-    public async Task<(IEnumerable<CreateClubPayload> payloads, IEnumerable<string> errors)> FetchAllClubs(CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<CreateClubPayload> payloads, IEnumerable<string> errors)> FetchAllClubs(bool isNba = true, CancellationToken cancellationToken = default)
     {
         var clubs = new List<CreateClubPayload>();
+        IProballersUriHelper uriHelper = GetUriHelper(isNba);
         var failures = new List<string>();
-        var clubCodes = NbaClubUriHelper.GetCodes();
+        var clubCodes = uriHelper.GetCodes();
 
         foreach (var code in clubCodes)
         {
-            var clubUris = NbaClubUriHelper.GetClubUri(code);
+            var clubUris = uriHelper.GetClubUri(code);
             if (clubUris == null || clubUris.Length == 0)
             {
                 failures.Add($"No uri for club {code}");
@@ -100,11 +104,12 @@ public class ProballersGateway : IPlayerByClubGateway, IAllClubsGateway
         return (clubs, failures);
     }
 
-    private async Task<(IEnumerable<ProballersIntermediateDto>, IList<string>)> GetIntermediateDtoList(string clubCode, CancellationToken cancellationToken = default)
+    private async Task<(IEnumerable<ProballersIntermediateDto>, IList<string>)> GetIntermediateDtoList(string clubCode, bool isNba = false, CancellationToken cancellationToken = default)
     {
         var intermediateDtoList = new List<ProballersIntermediateDto>();
+        IProballersUriHelper uriHelper = GetUriHelper(isNba);
         var failures = new List<string>();
-        var clubUris = ProballersClubUriHelper.GetClubUri(clubCode);
+        var clubUris = uriHelper.GetClubUri(clubCode);
         foreach (var clubUri in clubUris)
         {
             var response = await _client.GetAsync($"/basketball/team/{clubUri}/all-time-roster", cancellationToken);
@@ -126,4 +131,6 @@ public class ProballersGateway : IPlayerByClubGateway, IAllClubsGateway
 
         return (intermediateDtoList, failures);
     }
+
+    private IProballersUriHelper GetUriHelper(bool isNba) => isNba ? _nbaUriHelper : _euroleagueUriHelper;
 }

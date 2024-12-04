@@ -31,7 +31,7 @@ var builder = CoconaApp.CreateBuilder();
 var app = builder.Build();
 
 {
-    app.AddCommands<PlayerCommands>();
+    app.AddSubCommand("players", PlayerCommands.Commands);
     app.AddSubCommand("clubs", ClubCommands.Commands);
     app.Run();
 }
