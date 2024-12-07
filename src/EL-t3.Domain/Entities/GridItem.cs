@@ -11,6 +11,9 @@ public enum GridItemType
 
     [Description("COUNTRY")]
     COUNTRY,
+
+    [Description("TEAMMATE")]
+    TEAMMATE
 }
 
 public class GridItem

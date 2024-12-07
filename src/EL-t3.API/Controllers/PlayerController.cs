@@ -34,9 +34,9 @@ public class PlayerController : Controller
     }
 
     [HttpPost("check-constraints/{id}")]
-    public async Task<IActionResult> CheckConstraints(int id, [FromBody] IEnumerable<PlayerConstraintDto> constraints)
+    public async Task<IActionResult> CheckConstraints(int id, [FromBody] IEnumerable<CheckPlayerConstraints.Constraint> constraints)
     {
-        var query = new CheckPlayerConstraints.Query(id, constraints.Select(x => x.GetSubtype()));
+        var query = new CheckPlayerConstraints.Query(id, constraints);
 
         var result = await _mediator.Send(query);
         return Ok(result);

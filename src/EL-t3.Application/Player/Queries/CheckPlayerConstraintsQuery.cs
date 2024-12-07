@@ -1,17 +1,16 @@
 using EL_t3.Application.Common.Interfaces.Context;
+using EL_t3.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace EL_t3.Application.Player.Queries;
 
-public record PlayerConstraint();
-public sealed record PlayerClubConstraint(int Id) : PlayerConstraint;
-public sealed record PlayerCountryConstraint(string CountryCode) : PlayerConstraint;
 
 public class CheckPlayerConstraints
 {
-    public record Query(int Id, IEnumerable<PlayerConstraint> Constraints) : IRequest<bool>;
+    public record Constraint(GridItemType Type, string Item);
+    public record Query(int Id, IEnumerable<Constraint> Constraints) : IRequest<bool>;
 
 
     public record QueryHandler : IRequestHandler<Query, bool>
@@ -36,51 +35,40 @@ public class CheckPlayerConstraints
             return true;
         }
 
-        private async Task<bool> ValidateConstraint(int playerId, PlayerConstraint constraint)
+        private async Task<bool> ValidateConstraint(int playerId, Constraint constraint)
         {
-            if (constraint is PlayerClubConstraint clubConstraint)
+            return constraint.Type switch
             {
-                return await ValidateClubConstraint(playerId, clubConstraint);
-            }
-            if (constraint is PlayerCountryConstraint countryConstraint)
-            {
-                return await ValidateCountryConstraint(playerId, countryConstraint);
-            }
-            return false;
+                GridItemType.CLUB => await ValidateClubConstraint(playerId, long.Parse(constraint.Item)),
+                GridItemType.COUNTRY => await ValidateCountryConstraint(playerId, constraint.Item),
+                _ => true
+            };
         }
 
-        private async Task<bool> ValidateCountryConstraint(int playerId, PlayerCountryConstraint countryConstraint)
+        private async Task<bool> ValidateCountryConstraint(int playerId, string code)
         {
             var num = await _context.Players
-                         .Where(p => p.Id == playerId && p.Country == countryConstraint.CountryCode)
+                         .Where(p => p.Id == playerId && p.Country == code)
                          .CountAsync();
 
             return num > 0;
         }
 
-        private async Task<bool> ValidateClubConstraint(int playerId, PlayerClubConstraint clubConstraint)
+        private async Task<bool> ValidateClubConstraint(int playerId, long clubId)
         {
             var num = await _context.PlayerSeasons
-                         .Where(ps => ps.ClubId == clubConstraint.Id && ps.PlayerId == playerId)
+                         .Where(ps => ps.ClubId == clubId && ps.PlayerId == playerId)
                          .CountAsync();
 
             return num > 0;
         }
     }
 
-    public class PlayerClubConstraintValidator : AbstractValidator<PlayerClubConstraint>
+    public class ConstraintValidator : AbstractValidator<Constraint>
     {
-        public PlayerClubConstraintValidator()
+        public ConstraintValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Id must not be empty and must be an integer.");
-        }
-    }
-
-    public class PlayerCountryConstraintValidator : AbstractValidator<PlayerCountryConstraint>
-    {
-        public PlayerCountryConstraintValidator()
-        {
-            RuleFor(x => x.CountryCode).NotEmpty().WithMessage("Country Code must not be empty.");
+            RuleFor(x => x.Item).NotEmpty().WithMessage("Item must not be empty.");
         }
     }
 
@@ -88,11 +76,8 @@ public class CheckPlayerConstraints
     {
         public QueryValidator()
         {
-            RuleForEach(x => x.Constraints).SetInheritanceValidator(v =>
-            {
-                v.Add(new PlayerClubConstraintValidator());
-                v.Add(new PlayerCountryConstraintValidator());
-            });
+            RuleForEach(x => x.Constraints).SetValidator(new ConstraintValidator());
+            RuleFor(x => x.Id).NotEmpty();
         }
     }
 }

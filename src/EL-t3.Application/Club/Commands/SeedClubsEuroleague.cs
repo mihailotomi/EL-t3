@@ -26,8 +26,7 @@ public class SeedClubsEuroleague
         public async Task<IEnumerable<string>> Handle(Command request, CancellationToken cancellationToken)
         {
             List<string> allErrors = [];
-            IEnumerable<int> seasons = Enumerable.Range(2000, 2023 - 2000 + 1);
-            foreach (int season in seasons)
+            for (int season = 2024; season >= 2000; season--)
             {
                 _logger.LogInformation("Seeding clubs for season {season}", season);
                 var (payloads, seasonErrors) = await _clubGateway.FetchClubsBySeasonAsync(season);

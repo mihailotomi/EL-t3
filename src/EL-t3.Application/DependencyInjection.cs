@@ -1,4 +1,5 @@
 using EL_t3.Application.Common.Behaviors;
+using EL_t3.Application.Grid.Services;
 using EL_t3.Application.Player.Helpers;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ public static class DependencyInjection
         });
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
         services.AddScoped<PlayerSeedHelper>();
+        services.AddScoped<GridGeneratorService>();
 
         return services;
     }

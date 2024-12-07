@@ -32,7 +32,7 @@ public class SeedClubsNba
             }
 
             // add -NBA tag to code because of possible conflict with Euroleague club codes
-            var clubs = payloads.Select(p => Domain.Entities.Club.Create(name: p.Name, code: p.Code + "-NBA", p.CrestUrl));
+            var clubs = payloads.Select(p => Domain.Entities.Club.Create(name: p.Name, code: p.Code + "-NBA", p.CrestUrl, isNba: true));
 
             await _dbContext.Clubs.UpsertRange(clubs)
                 .On((c) => new { c.Code })

@@ -30,7 +30,7 @@ public class SeedPlayersBySeason
         {
             List<string> allErrors = [];
 
-            for (int season = 2000; season <= 2023; season++)
+            for (int season = 2024; season >= 2000; season--)
             {
                 _logger.LogInformation("Seeding players for season {season}", season);
 
