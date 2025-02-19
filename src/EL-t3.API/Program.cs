@@ -1,5 +1,5 @@
+using EL_t3.API.Infrastructure;
 using EL_t3.Application;
-using EL_t3.Application.Common.Exceptions.Middleware;
 using EL_t3.Infrastructure;
 using EL_t3.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -23,32 +23,35 @@ var developmentAllowedOrigin = "development_allowed_origin";
     builder.Services.AddCore();
     builder.Services.AddRepositories();
     builder.Services.AddControllers();
+    builder.Services.AddExceptionHandler<CustomExceptionHandler>();
     builder.Services.AddGateways();
     builder.Logging.AddConsole();
 
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(opt => { });
     builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: developmentAllowedOrigin,
-                      policy =>
-                      {
-                          policy.AllowAnyHeader();
-                          policy.AllowAnyMethod();
-                          policy.WithOrigins("http://localhost:5173");
-                      });
-});
+    {
+        options.AddPolicy(name: developmentAllowedOrigin,
+            policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:5173");
+                });
+    });
 }
 
 var app = builder.Build();
 
 {
     // app.UseHttpsRedirection();
-    app.UseMiddleware<ErrorHandlerMiddleware>();
     app.UseCors(developmentAllowedOrigin);
+    app.UseExceptionHandler("/Error");
 
     app.MapControllers();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(opt => { });
 }
 
 app.Run();
+
+public partial class Program { }

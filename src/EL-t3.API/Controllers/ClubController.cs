@@ -15,7 +15,7 @@ public class ClubController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetClubById(int id)
+    public async Task<IActionResult> GetClubById(long id)
     {
         var query = new GetClubById.Query(id);
 

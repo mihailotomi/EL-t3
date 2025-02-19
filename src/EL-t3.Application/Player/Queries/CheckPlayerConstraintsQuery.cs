@@ -1,4 +1,5 @@
 using EL_t3.Application.Common.Interfaces.Context;
+using EL_t3.Application.Player.Payloads;
 using EL_t3.Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -9,8 +10,7 @@ namespace EL_t3.Application.Player.Queries;
 
 public class CheckPlayerConstraints
 {
-    public record Constraint(GridItemType Type, string Item);
-    public record Query(int Id, IEnumerable<Constraint> Constraints) : IRequest<bool>;
+    public record Query(int Id, IEnumerable<PlayerConstraintPayload> Constraints) : IRequest<bool>;
 
 
     public record QueryHandler : IRequestHandler<Query, bool>
@@ -35,7 +35,7 @@ public class CheckPlayerConstraints
             return true;
         }
 
-        private async Task<bool> ValidateConstraint(int playerId, Constraint constraint)
+        private async Task<bool> ValidateConstraint(int playerId, PlayerConstraintPayload constraint)
         {
             return constraint.Type switch
             {
@@ -64,7 +64,7 @@ public class CheckPlayerConstraints
         }
     }
 
-    public class ConstraintValidator : AbstractValidator<Constraint>
+    public class ConstraintValidator : AbstractValidator<PlayerConstraintPayload>
     {
         public ConstraintValidator()
         {

@@ -1,4 +1,5 @@
 using EL_t3.API.Contracts.Player;
+using EL_t3.Application.Player.Payloads;
 using EL_t3.Application.Player.Queries;
 using EL_t3.Domain.Entities;
 using Mapster;
@@ -34,7 +35,7 @@ public class PlayerController : Controller
     }
 
     [HttpPost("check-constraints/{id}")]
-    public async Task<IActionResult> CheckConstraints(int id, [FromBody] IEnumerable<CheckPlayerConstraints.Constraint> constraints)
+    public async Task<IActionResult> CheckConstraints(int id, [FromBody] IEnumerable<PlayerConstraintPayload> constraints)
     {
         var query = new CheckPlayerConstraints.Query(id, constraints);
 
@@ -42,4 +43,13 @@ public class PlayerController : Controller
         return Ok(result);
     }
 
+    // TODO - refactor and move to CLI
+    [HttpPost("find-by-constraints")]
+    public async Task<IActionResult> FindByConstraints([FromBody] IEnumerable<PlayerConstraintPayload> constraints)
+    {
+        var query = new FindPlayerByConstraints.Query(constraints);
+
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
 }
