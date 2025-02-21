@@ -2,7 +2,7 @@ using EL_t3.Application.Common.Interfaces.Context;
 using EL_t3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace EL_t3.Infrastructure.Database;
+namespace EL_t3.Infrastructure.Persistence;
 
 public class AppDatabaseContext : DbContext, IAppDatabaseContext
 {

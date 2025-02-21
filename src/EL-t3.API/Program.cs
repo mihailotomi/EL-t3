@@ -1,7 +1,7 @@
 using EL_t3.API.Infrastructure;
 using EL_t3.Application;
 using EL_t3.Infrastructure;
-using EL_t3.Infrastructure.Database;
+using EL_t3.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +21,7 @@ var developmentAllowedOrigin = "development_allowed_origin";
     builder.Services.AddDbContext<AppDatabaseContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddCore();
-    builder.Services.AddRepositories();
+    builder.Services.AddPersistence();
     builder.Services.AddControllers();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
     builder.Services.AddGateways();

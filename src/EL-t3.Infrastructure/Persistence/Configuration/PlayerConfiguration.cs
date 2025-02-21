@@ -2,7 +2,7 @@ using EL_t3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EL_t3.Infrastructure.Database.Configuration;
+namespace EL_t3.Infrastructure.Persistence.Configuration;
 
 public class PlayerConfiguration : IEntityTypeConfiguration<Player>
 {

@@ -1,6 +1,5 @@
 using EL_t3.Application.Common.Exceptions;
 using EL_t3.Application.Common.Interfaces.Context;
-using EL_t3.Application.Common.Interfaces.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
