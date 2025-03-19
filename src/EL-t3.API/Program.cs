@@ -1,3 +1,4 @@
+using EL_t3.API.Auth;
 using EL_t3.API.Infrastructure;
 using EL_t3.Application;
 using EL_t3.Infrastructure;
@@ -6,46 +7,41 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var developmentAllowedOrigin = "development_allowed_origin";
-
 {
-    builder.Services.AddHttpClient("euroleague-api", client =>
-    {
-        client.BaseAddress = new Uri("https://api-live.euroleague.net");
-    });
-    builder.Services.AddHttpClient("proballers", client =>
-    {
-        client.BaseAddress = new Uri("https://www.proballers.com");
-    });
-
     builder.Services.AddDbContext<AppDatabaseContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddCore();
     builder.Services.AddPersistence();
     builder.Services.AddControllers();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+    builder.Services.AddHttpClients();
     builder.Services.AddGateways();
+    builder.Services.AddAuth(builder.Configuration);
     builder.Logging.AddConsole();
 
     builder.Services.AddSwaggerGen(opt => { });
+
+    var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(name: developmentAllowedOrigin,
-            policy =>
-                {
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                    policy.WithOrigins("http://localhost:5173");
-                });
+        options.AddPolicy("AllowedOriginsPolicy", policy =>
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
     });
 }
 
 var app = builder.Build();
-
 {
-    // app.UseHttpsRedirection();
-    app.UseCors(developmentAllowedOrigin);
+    app.UseHttpsRedirection();
+    app.UseCors("AllowedOriginsPolicy");
     app.UseExceptionHandler("/Error");
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.MapControllers();
     app.UseSwagger();

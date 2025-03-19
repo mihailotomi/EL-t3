@@ -19,6 +19,20 @@ public static class DependencyInjection
         return services;
     }
 
+    public static IServiceCollection AddHttpClients(this IServiceCollection services)
+    {
+        services.AddHttpClient("euroleague-api", client =>
+    {
+        client.BaseAddress = new Uri("https://api-live.euroleague.net");
+    });
+        services.AddHttpClient("proballers", client =>
+        {
+            client.BaseAddress = new Uri("https://www.proballers.com");
+        });
+
+        return services;
+    }
+
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
         services.AddScoped<IAppDatabaseContext, AppDatabaseContext>();

@@ -25,7 +25,7 @@ public class SeedClubsNba
 
         public async Task<IEnumerable<string>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var (payloads, failures) = await _clubGateway.FetchAllClubs();
+            var (payloads, failures) = await _clubGateway.FetchAllClubs(isNba: true);
             if (failures.Any())
             {
                 _logger.LogError("There are errors while seeding NBA clubs");

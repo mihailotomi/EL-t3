@@ -36,8 +36,7 @@ public class SeedClubsEuroleague
                     _logger.LogError("There are errors for season {season}", season);
                 }
 
-
-                var clubs = payloads.Select(p => Domain.Entities.Club.Create(p.Code, p.Name, p.CrestUrl));
+                var clubs = payloads.Select(p => Domain.Entities.Club.Create(name: p.Name, code: p.Code, crestUrl: p.CrestUrl));
 
                 await _dbContext.Clubs.UpsertRange(clubs)
                     .On((c) => new { c.Code })

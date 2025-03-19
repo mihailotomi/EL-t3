@@ -2,16 +2,17 @@
 using EL_t3.Application.Player.Payloads;
 using EL_t3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EL_t3.Application.Player.Helpers;
 
 public class PlayerSeedHelper
 {
-    private readonly IAppDatabaseContext _dbContext;
+    private readonly IServiceProvider _serviceProvider;
 
-    public PlayerSeedHelper(IAppDatabaseContext dbContext)
+    public PlayerSeedHelper(IServiceProvider serviceProvider)
     {
-        _dbContext = dbContext;
+        _serviceProvider = serviceProvider;
     }
 
     /// <summary>
@@ -38,35 +39,55 @@ public class PlayerSeedHelper
     public async Task<IList<PlayerSeason>> PreparePlayerSeasons(IEnumerable<CreatePlayerSeasonPayload> rawPlayerSeasons, CancellationToken cancellationToken)
     {
         var playerSeasons = new List<PlayerSeason>();
+        var semaphore = new SemaphoreSlim(10);
 
-        foreach (var ps in rawPlayerSeasons)
+        var tasks = rawPlayerSeasons.Select(
+            async ps =>
         {
-            var club = await _dbContext.Clubs.Where(c => c.Code == ps.ClubCode).FirstOrDefaultAsync(cancellationToken);
-            var player = await _dbContext.Players
+            await semaphore.WaitAsync(cancellationToken);
+
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<IAppDatabaseContext>();
+
+            var club = await dbContext.Clubs.Where(c => c.Code == ps.ClubCode).FirstOrDefaultAsync(cancellationToken);
+            var player = await dbContext.Players
                 .Where(p =>
                     p.FirstName == ps.FirstName &&
                     p.LastName == ps.LastName &&
                     p.BirthDate == ps.BirthDate)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (player == null || club == null)
+            if (player is null || club is null)
             {
-                // Append to log file - player not found
-                continue;
+                // TODO - Append to log file - player not found
+                return;
             }
 
-            var playerSeason = PlayerSeason.Create
-            (
-                playerId: player.Id,
-                clubId: club.Id,
-                season: ps.Season,
-                startDate: ps.StartedAt,
-                endDate: ps.EndedAt
-            );
+            try
+            {
+                var playerSeason = PlayerSeason.Create
+                (
+                    playerId: player.Id,
+                    clubId: club.Id,
+                    season: ps.Season,
+                    startDate: ps.StartedAt,
+                    endDate: ps.EndedAt
+                );
 
-            playerSeasons.Add(playerSeason);
-        }
+                playerSeasons.Add(playerSeason);
+            }
+            catch
+            {
+                // TODO - Append to log file - player not found
+                return;
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        });
 
+        await Task.WhenAll(tasks);
         return playerSeasons;
     }
 }

@@ -4,11 +4,13 @@ using EL_t3.Application.Player.Queries;
 using EL_t3.Domain.Entities;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EL_t3.API.Controllers;
 
 [Route("players")]
+[Authorize]
 public class PlayerController : Controller
 {
     private readonly IMediator _mediator;

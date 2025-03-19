@@ -18,7 +18,7 @@ public static class ClubCommands
     public static void SeedClubs(ICoconaCommandsBuilder builder)
     {
         builder.AddCommand("euroleague", SeedClubsEuroleague).WithDescription("Seeds all Euroleague clubs for all seasons from 2000 onward.");
-        builder.AddCommand("nba", SeedPlayersNba).WithDescription("Seeds all 30 NBA clubs.");
+        builder.AddCommand("nba", SeedClubsNba).WithDescription("Seeds all 30 NBA clubs.");
     }
 
     public static async Task SeedClubsEuroleague([FromService] ICoconaAppContextAccessor contextAccessor, [FromService] IMediator mediator)
@@ -29,7 +29,7 @@ public static class ClubCommands
         var result = await mediator.Send(command, ctx.CancellationToken);
     }
 
-    public static async Task SeedPlayersNba([FromService] ICoconaAppContextAccessor contextAccessor, [FromService] IMediator mediator)
+    public static async Task SeedClubsNba([FromService] ICoconaAppContextAccessor contextAccessor, [FromService] IMediator mediator)
     {
         var ctx = contextAccessor.Current ?? throw new InvalidOperationException();
 

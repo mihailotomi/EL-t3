@@ -21,7 +21,7 @@ public class PlayerSeason : BaseEntity
         DateOnly endDate
         )
     {
-        if (endDate <= startDate)
+        if (endDate < startDate)
         {
             throw new ArgumentException("endDate must be after start date");
         }
