@@ -1,11 +1,12 @@
-using EL_t3.API.Tests.Integration.Common;
+using EL_t3.API.Tests.Common;
 using EL_t3.Domain.Entities;
 using FluentAssertions;
 using System.Net;
 
 
-namespace EL_t3.API.Tests.Integration.Controllers;
+namespace EL_t3.API.Tests.Controllers;
 
+[Collection("ApiIntegrationTests")]
 public class ClubControllerTests : BaseControllerTests
 {
     public ClubControllerTests(ApiFactory factory) : base(factory)
@@ -30,7 +31,7 @@ public class ClubControllerTests : BaseControllerTests
 
     private async Task<Club> SeedClub()
     {
-        var club = Domain.Entities.Club.Create("Partizan", "PAR", "http://partizan.crest.com", false);
+        var club = Club.Create("Partizan", "PAR", "http://partizan.crest.com", false);
         dbContext.Clubs.Add(club);
         await dbContext.SaveChangesAsync();
         return club;

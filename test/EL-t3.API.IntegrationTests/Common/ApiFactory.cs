@@ -1,5 +1,5 @@
-using System.Data.Common;
-using EL_t3.Infrastructure.Database;
+using EL_t3.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -7,9 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
+using System.Data.Common;
 using Testcontainers.PostgreSql;
+using WebAPI.Tests.Common;
 
-namespace EL_t3.API.Tests.Integration.Common;
+
+namespace EL_t3.API.Tests.Common;
 
 public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -21,13 +24,20 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     private static Respawner _respawner = null!;
     private DbConnection _dbConnection = default!;
-    private static bool _isInitialized;
     public ServiceProvider ServiceProvider { get; private set; } = default!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
         {
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultSignInScheme = "TestScheme";
+                    options.DefaultAuthenticateScheme = "TestScheme";
+                    options.DefaultChallengeScheme = "TestScheme";
+                })
+            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
+
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<AppDatabaseContext>));
 
@@ -37,23 +47,23 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             }
 
             services.AddDbContext<AppDatabaseContext>(options =>
-                options.UseNpgsql(_dbContainer.GetConnectionString()));
+            {
+                options.UseNpgsql(_dbContainer.GetConnectionString(), npgsqlOptions =>
+                {
+                    npgsqlOptions.MigrationsAssembly(typeof(AppDatabaseContext).Assembly.FullName);
+                    npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                });
+            });
 
             var sp = services.BuildServiceProvider();
             ServiceProvider = sp;
-        });
-    }
 
-    public async Task InitializeAsync()
-    {
-        if (!_isInitialized)
-        {
-            await _dbContainer.StartAsync();
-            _isInitialized = true;
+            using (var scope = sp.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDatabaseContext>();
 
-            using var scope = Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDatabaseContext>();
-            await db.Database.MigrateAsync();
+                db.Database.Migrate();
+            }
 
             _dbConnection = new NpgsqlConnection(_dbContainer.GetConnectionString());
             _dbConnection.Open();
@@ -62,9 +72,12 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             {
                 DbAdapter = DbAdapter.Postgres
             }).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
+        });
+    }
 
-        await ResetDatabaseAsync();
+    public async Task InitializeAsync()
+    {
+        await _dbContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()

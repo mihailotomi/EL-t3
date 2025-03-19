@@ -65,7 +65,7 @@ public class Player : BaseEntity
         string? imageUrl
     )
     {
-        return new Player(firstName, lastName, birthDate, country, imageUrl);
+        return new Player(firstName.ToUpper(), lastName.ToUpper(), birthDate, country, imageUrl);
     }
 
     public static Expression<Func<Player, Player, Player>> Upserter = (Player pDb, Player pIns) => new Player()

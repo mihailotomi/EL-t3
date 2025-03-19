@@ -1,10 +1,11 @@
-using EL_t3.API.Tests.Integration.Common;
-using EL_t3.Infrastructure.Database;
+using EL_t3.API.Tests.Common;
+using EL_t3.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EL_t3.API.Tests.Integration.Controllers;
+namespace EL_t3.API.Tests.Controllers;
 
-public abstract class BaseControllerTests : IClassFixture<ApiFactory>, IAsyncLifetime{
+public abstract class BaseControllerTests : IAsyncLifetime
+{
     protected readonly HttpClient client;
     protected Func<Task> resetDatabase;
     protected AppDatabaseContext dbContext = default!;
