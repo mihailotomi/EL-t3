@@ -1,4 +1,5 @@
 using EL_t3.Application.Common.Interfaces.Context;
+using EL_t3.Application.Player.DTOs;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +8,9 @@ namespace EL_t3.Application.Player.Queries;
 
 public class PlayerAutocomplete
 {
-    public record Query(string Search) : IRequest<IEnumerable<Domain.Entities.Player>>;
+    public record Query(string Search) : IRequest<IEnumerable<PlayerDTO>>;
 
-    public record QueryHandler : IRequestHandler<Query, IEnumerable<Domain.Entities.Player>>
+    public record QueryHandler : IRequestHandler<Query, IEnumerable<PlayerDTO>>
     {
         private readonly IAppDatabaseContext _context;
 
@@ -18,13 +19,15 @@ public class PlayerAutocomplete
             _context = context;
         }
 
-        public async Task<IEnumerable<Domain.Entities.Player>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PlayerDTO>> Handle(Query request, CancellationToken cancellationToken)
         {
             var searchPattern = $"%{request.Search.ToUpper()}%";
 
             return await _context.Players
                 .Where(p => EF.Functions.Like(p.FirstName + " " + p.LastName, searchPattern) ||
                         EF.Functions.Like(p.LastName + " " + p.FirstName, searchPattern))
+                .Take(20)
+                .Select(p => p.ToPlayerDTO())
                 .ToListAsync(cancellationToken);
         }
     }

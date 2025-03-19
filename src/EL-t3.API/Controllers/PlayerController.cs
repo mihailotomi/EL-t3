@@ -1,8 +1,5 @@
-using EL_t3.API.Contracts.Player;
 using EL_t3.Application.Player.Payloads;
 using EL_t3.Application.Player.Queries;
-using EL_t3.Domain.Entities;
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +24,7 @@ public class PlayerController : Controller
 
         var result = await _mediator.Send(query);
 
-        var config = new TypeAdapterConfig();
-        config.NewConfig<Player, PlayerDto>()
-            .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}");
-
-        var playerDtoList = result.Adapt<IEnumerable<PlayerDto>>(config);
-
-        return Ok(playerDtoList);
+        return Ok(result);
     }
 
     [HttpPost("check-constraints/{id}")]

@@ -1,14 +1,12 @@
-namespace EL_t3.API.Contracts.Player;
+namespace EL_t3.Application.Player.DTOs;
 
-public record PlayerDto
+public record PlayerDTO
     (
-        int Id,
+        long Id,
         string FirstName,
         string LastName,
         DateOnly BirthDate,
         string? Country,
         string? ImageUrl,
-        DateTime CreatedAt,
-        DateTime UpdatedAt,
         string FullName
     );
