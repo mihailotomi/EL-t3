@@ -3,22 +3,47 @@ using System.Text.Json.Serialization;
 
 namespace EL_t3.Domain.Entities;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum GridItemType
+public abstract class GridItem: BaseEntity
 {
-    [Description("CLUB")]
-    CLUB,
-
-    [Description("COUNTRY")]
-    COUNTRY,
-
-    [Description("TEAMMATE")]
-    TEAMMATE
 }
 
-public class GridItem
+public class ClubGridItem : GridItem
 {
-    public GridItemType Type { get; set; }
+    public Club Club { get; set; } = null!;
+    public long ClubId { get; set; }
 
-    public required object Item { get; set; }
+    private ClubGridItem() { }
+
+    public ClubGridItem(Club club)
+    {
+        Club = club;
+        ClubId = club.Id;
+    }
 }
+
+public class CountryGridItem : GridItem
+{
+    public string Country { get; set; } = null!;
+
+    private CountryGridItem() { }
+
+    public CountryGridItem(string country)
+    {
+        Country = country;
+    }
+}
+
+public class TeammateGridItem : GridItem
+{
+    public Player Teammate { get; set; } = null!;
+    public long TeammateId { get; set; }
+
+    private TeammateGridItem() { }
+
+    public TeammateGridItem(Player teammate)
+    {
+        Teammate = teammate;
+        TeammateId = teammate.Id;
+    }
+}
+

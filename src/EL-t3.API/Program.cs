@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 {
-    builder.Services.AddDbContext<AppDatabaseContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddCore();
-    builder.Services.AddPersistence();
+    builder.Services.AddPersistence((options) =>
+        {
+            options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        });
     builder.Services.AddControllers();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
     builder.Services.AddHttpClients();

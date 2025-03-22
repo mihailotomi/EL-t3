@@ -7,7 +7,7 @@ public static class GatewayClubMappingExtensions
 {
     public static CreateClubPayload ToPayload(this GatewayClub gc)
     {
-        string crestUrl = gc?.Images?.Crest ?? throw new ArgumentNullException(nameof(gc.Images.Crest), $"No crest found for club {gc.Code}");
+        string crestUrl = gc?.Images?.Crest ?? throw new ArgumentNullException(nameof(gc.Images.Crest), $"No crest found for club {gc!.Code}");
 
         return new CreateClubPayload
         (

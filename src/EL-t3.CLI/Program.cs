@@ -11,12 +11,12 @@ using Microsoft.Extensions.Logging;
 var builder = CoconaApp.CreateBuilder();
 
 {
-    builder.Services.AddDbContext<AppDatabaseContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddHttpClients();
     builder.Services.AddGateways();
-    builder.Services.AddPersistence();
-    builder.Services.AddCore();
+    builder.Services.AddPersistence((options) =>
+        {
+            options.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        }); builder.Services.AddCore();
     builder.Logging.AddConsole();
 }
 

@@ -10,6 +10,8 @@ public class AppDatabaseContext : DbContext, IAppDatabaseContext
     {
     }
 
+    public static string SchemaName {get; set;} = "euroleague-grids";
+
     public DbSet<Club> Clubs { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<PlayerSeason> PlayerSeasons { get; set; }

@@ -1,8 +1,9 @@
-﻿using EL_t3.Domain.Entities;
+﻿using EL_t3.Application.Player.Payloads;
+using EL_t3.Domain.Entities;
 
 namespace EL_t3.Application.Grid.DTOs;
 
-public static class DtoMapping
+public static class MappingExtension
 {
     public static GridItemDTO ToItemDTO(this ClubGridItemDTO c) =>
         new GridItemDTO(Type: GridItemType.CLUB, Item: c.Id.ToString(), ImageUrl: c.ImageUrl);

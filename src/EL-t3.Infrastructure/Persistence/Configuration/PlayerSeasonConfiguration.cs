@@ -8,38 +8,26 @@ public class PlayerSeasonConfiguration : IEntityTypeConfiguration<PlayerSeason>
 {
     public void Configure(EntityTypeBuilder<PlayerSeason> builder)
     {
-        builder.ToTable("player_seasons");
+        builder.ToTable("player_seasons", AppDatabaseContext.SchemaName);
 
         builder.HasKey(ps => ps.Id);
 
         builder.Property(ps => ps.Id)
-               .HasColumnName("id")
                .ValueGeneratedOnAdd();
 
-        builder.Property(ps => ps.ClubId)
-               .HasColumnName("club_id");
-
-        builder.Property(ps => ps.PlayerId)
-               .HasColumnName("player_id");
-
         builder.Property(ps => ps.Season)
-               .HasColumnName("season")
                .IsRequired();
 
         builder.Property(ps => ps.StartDate)
-               .HasColumnName("start_date")
                .IsRequired();
 
         builder.Property(ps => ps.EndDate)
-               .HasColumnName("end_date")
                .IsRequired();
 
         builder.Property(ps => ps.CreatedAt)
-               .HasColumnName("created_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(ps => ps.UpdatedAt)
-               .HasColumnName("updated_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasIndex(ps => new { ps.ClubId, ps.PlayerId, ps.Season })

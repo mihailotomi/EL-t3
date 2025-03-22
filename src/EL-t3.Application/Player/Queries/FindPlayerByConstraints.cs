@@ -32,7 +32,7 @@ namespace EL_t3.Application.Player.Queries
 
             private IQueryable<Domain.Entities.Player> GetConstraintSubquery(PlayerConstraintPayload constraint)
             {
-                if (constraint.Type == Domain.Entities.GridItemType.CLUB)
+                if (constraint.Type == GridItemType.CLUB)
                 {
                     return ClubConstraintSq(long.Parse(constraint.Item));
                 }
